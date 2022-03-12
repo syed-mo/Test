@@ -39,7 +39,7 @@ def main(argv):
             # count was not a number, so silently
             # ignore/discard this line
             pass
-
+    print(wcss)
     tfidf = calculateTFIDF(wcss) # Implement this function
 
 def calculateTFIDF(wcss):
