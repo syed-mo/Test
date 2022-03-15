@@ -48,7 +48,8 @@ def main(argv):
         print(document)
         for word in OrderedDict(sorted(tf_idf_details[document].items(), key=lambda t: t[1], reverse=True)):
              print(word + " " + str(round(tf_idf_details[document][word], 5)))
-
+            
+            
 def calculate_tf(values):
     total_words = sum(list(values.values()))
     tf_map = {}
@@ -56,6 +57,14 @@ def calculate_tf(values):
         tf_map[word] = occurrence/total_words
 
     return tf_map
+
+
+def normalize(values):
+    sum_sq = 0
+    for val in values:
+        sum_sq += pow(val, 2)
+    return math.sqrt(sum_sq)
+
 
 def calculate_tf_idf(word_map):
 
@@ -75,11 +84,16 @@ def calculate_tf_idf(word_map):
                 idf_details[word] = 1
 
     for word, no_of_documents in idf_details.items():
-        idf_details[word] = math.log10(total_documents/no_of_documents)
+        idf_details[word] = math.log((total_documents+1)/(no_of_documents+1)) + 1
 
     for document, values in word_map.items():
         for word in values.keys():
             tf_idf_details[document][word] = tf_details[document][word] * idf_details[word]
+
+    for document, values in tf_idf_details.items():
+        normalize_value = normalize(list(values.values()))
+        for key, value in values.items():
+            tf_idf_details[document][key] = value/normalize_value
 
     return tf_idf_details
 
